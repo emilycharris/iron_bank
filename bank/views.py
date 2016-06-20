@@ -4,6 +4,8 @@ from django.views.generic.edit import CreateView
 from django.views.generic.list import ListView
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
+from bank.models import Transaction
+
 
 # Create your views here.
 
@@ -17,3 +19,16 @@ class CreateUserView(CreateView):
 
 class ProfileView(ListView):
     model = Transaction
+
+
+    def get_context_data(self):
+        context = super().get_context_data()
+        balance = 0
+        transactions = Transaction.objects.filter(user=self.request.user)
+        for transaction in transactions:
+            if transaction.transaction_type == 'DR':
+                balance -= transaction.dollar_amount
+            elif transaction.transaction_type == 'CR':
+                balance += transaction.dollar_amount
+        context['balance'] = balance
+        return context

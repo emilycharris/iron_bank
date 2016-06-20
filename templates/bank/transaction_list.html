@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h4>Your current balance is:   {{balance}}
+</h4>
+<br>
+  {% for transaction in object_list %}
+
+  {{transaction.user}}
+  {{transaction.dollar_amount}}
+  {{transaction.transaction_type}}
+  {{transaction.vendor}}
+  {{transaction.date}}
+
+
+
+  {% endfor %}
+{% endblock %}

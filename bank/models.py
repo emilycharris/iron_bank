@@ -21,3 +21,6 @@ class Transaction(models.Model):
     vendor = models.CharField(max_length=50)
     date = models.DateTimeField(auto_now_add=True)
     transaction_type = models.CharField(max_length=10, choices=TRANSACTION_CHOICES, default=DEBIT)
+
+    class Meta:
+        ordering = ['-date']

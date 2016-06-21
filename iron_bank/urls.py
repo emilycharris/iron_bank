@@ -15,7 +15,7 @@ Including another URLconf
 """
 from django.conf.urls import url, include
 from django.contrib import admin
-from bank.views import IndexView, CreateUserView, ProfileView
+from bank.views import IndexView, CreateUserView, ProfileView, CreateTransactionView
 from django.contrib.auth.decorators import login_required
 
 
@@ -25,4 +25,5 @@ urlpatterns = [
     url('^', include('django.contrib.auth.urls')),
     url(r'^create_user/$', CreateUserView.as_view(), name='create_user_view'),
     url(r'^profile/$', login_required(ProfileView.as_view()), name='profile_view'),
+    url(r'^new_transaction/$', login_required(CreateTransactionView.as_view()), name='create-transaction_view')
 ]

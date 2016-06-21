@@ -67,3 +67,17 @@ class TransactionDetailView(DetailView):
 
     def get_queryset(self):
         return Transaction.objects.filter(user=self.request.user)
+
+class CreateTransferView(CreateView):
+    model = Transaction
+    fields = ['vendor', 'dollar_amount' ]
+    success_url = '/profile'
+
+    def form_valid(self, form):
+        transfer = form.save(commit=False)
+        transfer.user = self.request.user
+        #balance = account_balance(self)
+        transfer_to = User.objects.get(id=transfer.vendor)
+        Transaction.objects.create(user=transfer_to, dollar_amount=transfer.dollar_amount,
+            vendor="", transaction_type='Deposit' )
+        return super(CreateTransferView, self).form_valid(form)

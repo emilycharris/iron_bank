@@ -31,4 +31,5 @@ class ProfileView(ListView):
             elif transaction.transaction_type == 'CR':
                 balance += transaction.dollar_amount
         context['balance'] = balance
+        context['transactions'] = transactions
         return context

@@ -3,6 +3,6 @@
 {% block content %}
 
 <h1>Welcome to Iron Bank</h1>
-<h4><em>Please login or create an account</em></h4>
+<h4><em>Please <a href="{% url 'create_user_view' %}">create an account</a> or <a href="{% url 'login' %}">login</a></em></h4>
 
 {% endblock %}

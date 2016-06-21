@@ -10,11 +10,11 @@ transaction_type = ['deposit', 'withdrawal']
 
 class Transaction(models.Model):
 
-    DEBIT = 'DR'
-    CREDIT = 'CR'
+    DEBIT = 'Withdrawal'
+    CREDIT = 'Deposit'
     TRANSACTION_CHOICES = (
-        (DEBIT, 'Debit'),
-        (CREDIT, 'Credit'),
+        (DEBIT, 'Withdrawal'),
+        (CREDIT, 'Deposit'),
     )
     user = models.ForeignKey(User)
     dollar_amount = models.DecimalField(max_digits=100,decimal_places=2)

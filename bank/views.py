@@ -26,9 +26,9 @@ class ProfileView(ListView):
         balance = 0
         transactions = Transaction.objects.filter(user=self.request.user)
         for transaction in transactions:
-            if transaction.transaction_type == 'DR':
+            if transaction.transaction_type == 'Withdrawal':
                 balance -= transaction.dollar_amount
-            elif transaction.transaction_type == 'CR':
+            elif transaction.transaction_type == 'Deposit':
                 balance += transaction.dollar_amount
         context['balance'] = balance
         context['transactions'] = transactions

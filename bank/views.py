@@ -8,6 +8,10 @@ from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 from bank.models import Transaction
 import datetime
+from django import forms
+from django.core.exceptions import ValidationError
+
+
 
 
 # Create your views here.
@@ -51,14 +55,11 @@ class CreateTransactionView(CreateView):
     def form_valid(self, form):
         transaction = form.save(commit=False)
         transaction.user = self.request.user
-        if transaction.transaction_type == 'DR':
-            if transaction.dollar_amount > balance: #this is not correct
-                raise Exception("You can't spend more than you have.")
-            else:
-                balance -= transaction.dollar_amount
-        elif transaction.transaction_type == 'CR':
-            balance += transaction.dollar_amount
-        return super(CreateTransactionView, self).form_valid(form)
+        balance = account_balance(self)
+        if transaction.dollar_amount > balance:
+            raise ValidationError("You can't spend more than you have.")
+        else:
+            return super(CreateTransactionView, self).form_valid(form)
 
 class TransactionDetailView(DetailView):
     model = Transaction

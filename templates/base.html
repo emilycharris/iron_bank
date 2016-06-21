@@ -24,8 +24,11 @@
                 {% if request.user.is_authenticated %}
                   <li><a href="">Iron Bank</a></li>
                   <li><a href="{% url 'profile_view' %}">Profile for {{ user }}</a></li>
+                  <li><a href="{% url 'create_transaction_view' %}">Create Transaction</a></li>
+
                   <li><a href="{% url 'logout' %}?next={% url 'login' %}">Logout</a></li>
                 {% else %}
+                  <li><a href="">Iron Bank</a></li>
                   <li><a href="{% url 'create_user_view' %}">Create An Account</a></li>
                   <li><a href="{% url 'login' %}">Login</a></li>
 

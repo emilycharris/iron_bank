@@ -1,9 +1,11 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h3>Account {{user.id}} balance:   {{balance}} </h3>
+<h3>Account {{user.id}} running balance:   {{balance}} </h3>
 <br>
 <h4>Transactions:</h4>
+<h5><em>Excludes transactions greater than 30 days old</em></h5>
+
 <div class="table-responsive">
   <table class='table'>
     <th>Transaction Detail</th>

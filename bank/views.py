@@ -2,6 +2,8 @@ from django.shortcuts import render
 from django.views.generic.base import TemplateView
 from django.views.generic.edit import CreateView
 from django.views.generic.list import ListView
+from django.views.generic.detail import DetailView
+
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 from bank.models import Transaction
@@ -58,3 +60,12 @@ class CreateTransactionView(CreateView):
         elif transaction.transaction_type == 'CR':
             balance += transaction.dollar_amount
         return super(CreateTransactionView, self).form_valid(form)
+
+class TransactionDetailView(DetailView):
+    model = Transaction
+    template_name = 'transaction_detail.html'
+
+    def get_queryset(self, **kwargs):
+        context = Transaction.objects.get(id=self.kwargs.get('pk'))
+        #cannot get to work
+        return context

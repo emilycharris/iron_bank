@@ -26,5 +26,5 @@ urlpatterns = [
     url(r'^create_user/$', CreateUserView.as_view(), name='create_user_view'),
     url(r'^profile/$', login_required(ProfileView.as_view()), name='profile_view'),
     url(r'^new_transaction/$', login_required(CreateTransactionView.as_view()), name='create-transaction_view'),
-    url(r'^transaction_detail/$', login_required(TransactionDetailView.as_view()), name='transaction_detail_view')
+    url(r'^transaction_detail/(?P<pk>\d+)/$', login_required(TransactionDetailView.as_view()), name='transaction_detail_view')
 ]

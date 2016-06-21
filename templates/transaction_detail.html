@@ -1,6 +1,12 @@
 {% extends "base.html" %}
 {% block content %}
-
-hello
+<div class="container">
+<h1>{{object.dollar_amount}}</h1>
+<h1>{{object.transaction_type}}</h1>
+<br>
+<h2>{{object.vendor}}</h2>
+<h3>{{object.date}}</h3>
+<small>{{object.user}}</small>
+</div>
 
 {% endblock %}

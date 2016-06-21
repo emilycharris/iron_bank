@@ -12,6 +12,17 @@ import datetime
 
 # Create your views here.
 
+def account_balance():
+    balance = 0
+    transactions = Transaction.objects.filter(user=self.request.user)
+    for transaction in transactions:
+        if transaction.transaction_type == 'Withdrawal':
+            balance -= transaction.dollar_amount
+        elif transaction.transaction_type == 'Deposit':
+            balance += transaction.dollar_amount
+    return balance, transactions
+
+
 class IndexView(TemplateView):
     template_name = 'index.html'
 
@@ -25,23 +36,9 @@ class ProfileView(ListView):
 
     def get_context_data(self):
         context = super().get_context_data()
-        balance = 0
-        transactions = Transaction.objects.filter(user=self.request.user)
-        for transaction in transactions:
-            if transaction.transaction_type == 'Withdrawal':
-                balance -= transaction.dollar_amount
-            elif transaction.transaction_type == 'Deposit':
-                balance += transaction.dollar_amount
-        context['balance'] = balance
-        context['transactions'] = transactions
+        filtered = Transaction.objects.filter(date__gte=datetime.datetime.now()-datetime.timedelta(days=30)).filter(user=self.request.user)
+        context['filtered'] = filtered
         return context
-
-    def get_queryset(self):
-        context = super().get_queryset()
-        date_parameter = datetime.datetime.now() + datetime.timedelta(-30)
-        # how to test???
-        filtered = Transaction.objects.filter(user=self.request.user).filter(date__gte=date_parameter)
-        return filtered
 
 
 class CreateTransactionView(CreateView):
@@ -65,7 +62,5 @@ class TransactionDetailView(DetailView):
     model = Transaction
     template_name = 'transaction_detail.html'
 
-    def get_queryset(self, **kwargs):
-        context = Transaction.objects.get(id=self.kwargs.get('pk'))
-        #cannot get to work
-        return context
+    def get_queryset(self):
+        return Transaction.objects.filter(user=self.request.user)

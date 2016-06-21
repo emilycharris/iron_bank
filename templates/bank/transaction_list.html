@@ -1,21 +1,21 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h3>Your current balance in account {{user.id}} is:   {{balance}} </h3>
+<h3>Account {{user.id}} balance:   {{balance}} </h3>
 <br>
 <h4>Transactions:</h4>
 <div class="table-responsive">
   <table class='table'>
-    <th>Transaction ID</th>
+    <th>Transaction Detail</th>
     <th>Date</th>
     <th>Vendor/Description</th>
     <th>Deposit/Withdrawal</th>
     <th>Amount</th>
     <tbody>    </tbody>
 
-      {% for transaction in transactions %}
+      {% for transaction in filtered %}
       <tr>
-          <td><a href="#">{{transaction.id}}</a></td>
+          <td><a href="{% url 'transaction_detail_view' transaction.pk %}">Click here for details</a> </td>
           <td>{{transaction.date}}</td>
           <td>{{transaction.vendor}}</td>
           <td>{{transaction.transaction_type}}</td>

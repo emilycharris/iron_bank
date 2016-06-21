@@ -12,15 +12,15 @@ import datetime
 
 # Create your views here.
 
-def account_balance():
-    balance = 0
+def account_balance(self):
+    self.balance = 0
     transactions = Transaction.objects.filter(user=self.request.user)
     for transaction in transactions:
         if transaction.transaction_type == 'Withdrawal':
-            balance -= transaction.dollar_amount
+            self.balance -= transaction.dollar_amount
         elif transaction.transaction_type == 'Deposit':
-            balance += transaction.dollar_amount
-    return balance, transactions
+            self.balance += transaction.dollar_amount
+    return self.balance
 
 
 class IndexView(TemplateView):
@@ -36,8 +36,10 @@ class ProfileView(ListView):
 
     def get_context_data(self):
         context = super().get_context_data()
+        balance = account_balance(self)
         filtered = Transaction.objects.filter(date__gte=datetime.datetime.now()-datetime.timedelta(days=30)).filter(user=self.request.user)
         context['filtered'] = filtered
+        context['balance'] = balance
         return context
 
 

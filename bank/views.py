@@ -10,6 +10,10 @@ from bank.models import Transaction
 import datetime
 from django import forms
 from django.core.exceptions import ValidationError
+from django.http import request, HttpResponse
+from django.contrib import messages
+
+
 
 
 
@@ -25,6 +29,7 @@ def account_balance(self):
         elif transaction.transaction_type == 'Deposit':
             self.balance += transaction.dollar_amount
     return self.balance
+
 
 
 class IndexView(TemplateView):
@@ -57,7 +62,7 @@ class CreateTransactionView(CreateView):
         transaction.user = self.request.user
         balance = account_balance(self)
         if transaction.dollar_amount > balance:
-            raise ValidationError("You can't spend more than you have.")
+            return HttpResponse("You can't spend more than you have.")
         else:
             return super(CreateTransactionView, self).form_valid(form)
 
@@ -76,8 +81,12 @@ class CreateTransferView(CreateView):
     def form_valid(self, form):
         transfer = form.save(commit=False)
         transfer.user = self.request.user
-        #balance = account_balance(self)
-        transfer_to = User.objects.get(id=transfer.vendor)
-        Transaction.objects.create(user=transfer_to, dollar_amount=transfer.dollar_amount,
-            vendor="", transaction_type='Deposit' )
+        balance = account_balance(self)
+        if transfer.dollar_amount > balance:
+            return HttpResponse("You can't transfer more than you have.")
+        else:
+            transfer_to = User.objects.get(id=transfer.vendor)
+            Transaction.objects.create(user=transfer_to, dollar_amount=transfer.dollar_amount,
+                vendor="", transaction_type='Deposit' )
+
         return super(CreateTransferView, self).form_valid(form)

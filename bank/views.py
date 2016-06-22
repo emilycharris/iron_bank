@@ -3,20 +3,12 @@ from django.views.generic.base import TemplateView
 from django.views.generic.edit import CreateView
 from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
-
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 from bank.models import Transaction
 import datetime
 from django import forms
-from django.core.exceptions import ValidationError
-from django.http import request, HttpResponse
 from django.contrib import messages
-
-
-
-
-
 
 # Create your views here.
 
@@ -29,6 +21,7 @@ def account_balance(self):
         elif transaction.transaction_type == 'Deposit':
             self.balance += transaction.dollar_amount
     return self.balance
+
 
 
 
@@ -62,9 +55,9 @@ class CreateTransactionView(CreateView):
         transaction.user = self.request.user
         balance = account_balance(self)
         if transaction.dollar_amount > balance:
-            return HttpResponse("You can't spend more than you have.")
-        else:
-            return super(CreateTransactionView, self).form_valid(form)
+            form.add_error('dollar_amount', 'Insufficient Funds')
+            return self.form_invalid(form)
+        return super(CreateTransactionView, self).form_valid(form)
 
 class TransactionDetailView(DetailView):
     model = Transaction
@@ -83,10 +76,10 @@ class CreateTransferView(CreateView):
         transfer.user = self.request.user
         balance = account_balance(self)
         if transfer.dollar_amount > balance:
-            return HttpResponse("You can't transfer more than you have.")
-        else:
-            transfer_to = User.objects.get(id=transfer.vendor)
-            Transaction.objects.create(user=transfer_to, dollar_amount=transfer.dollar_amount,
-                vendor="", transaction_type='Deposit' )
+            form.add_error('dollar_amount', 'Insufficient Funds')
+            return self.form_invalid(form)
+        transfer_to = User.objects.get(id=transfer.vendor)
+        Transaction.objects.create(user=transfer_to, dollar_amount=transfer.dollar_amount,
+            vendor="", transaction_type='Deposit' )
 
         return super(CreateTransferView, self).form_valid(form)

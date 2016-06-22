@@ -13,7 +13,7 @@
     <th>Vendor/Description</th>
     <th>Deposit/Withdrawal</th>
     <th>Amount</th>
-    <tbody>    </tbody>
+    <tbody>
 
       {% for transaction in filtered %}
       <tr>
@@ -24,6 +24,7 @@
           <td>{{transaction.dollar_amount}}</td>
       </tr>
       {% endfor %}
+    </tbody>
   </table>
 </div>
 {% endblock %}

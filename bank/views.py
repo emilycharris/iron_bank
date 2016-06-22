@@ -46,7 +46,7 @@ class ProfileView(ListView):
     def get_context_data(self):
         context = super().get_context_data()
         balance = account_balance(self)
-        filtered = Transaction.objects.filter(date__gte=datetime.datetime.now()-datetime.timedelta(days=30)).filter(user=self.request.user)
+        filtered = Transaction.objects.filter(date__gte=datetime.datetime.now()-datetime.timedelta(days=30), user=self.request.user)
         context['filtered'] = filtered
         context['balance'] = balance
         return context

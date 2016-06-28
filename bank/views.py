@@ -54,9 +54,10 @@ class CreateTransactionView(CreateView):
         transaction = form.save(commit=False)
         transaction.user = self.request.user
         balance = account_balance(self)
-        if transaction.dollar_amount > balance:
-            form.add_error('dollar_amount', 'Insufficient Funds')
-            return self.form_invalid(form)
+        if transaction.transaction_type == 'withdrawal':
+            if transaction.dollar_amount > balance:
+                form.add_error('dollar_amount', 'Insufficient Funds')
+                return self.form_invalid(form)
         return super(CreateTransactionView, self).form_valid(form)
 
 class TransactionDetailView(DetailView):

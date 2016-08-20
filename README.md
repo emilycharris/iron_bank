@@ -53,3 +53,5 @@ If I am in any way able to breech another user's data as a logged in or not logg
 
 For a user to transfer funds to another account they will require knowledge of the other bank account #. This will be assumed to have been shared outside of the application, so don't try to build anything that allows a user to search for another bank account - that would be BAD!!!! But given that two users have shared bank account numbers, one of those users should be able to transfer money from their own account into another users account. Do NOT allow a user to transfer funds if it would result in them having insufficient funds.
 
+To complete this assignment, I used Python and Django.
+

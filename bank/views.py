@@ -12,15 +12,15 @@ from django.contrib import messages
 
 # Create your views here.
 
-def account_balance(self):
-    self.balance = 0
-    transactions = Transaction.objects.filter(user=self.request.user)
+def account_balance(user):
+    balance = 0
+    transactions = Transaction.objects.filter(user=user)
     for transaction in transactions:
         if transaction.transaction_type == 'Withdrawal':
-            self.balance -= transaction.dollar_amount
+            balance -= transaction.dollar_amount
         elif transaction.transaction_type == 'Deposit':
-            self.balance += transaction.dollar_amount
-    return self.balance
+            balance += transaction.dollar_amount
+    return balance
 
 
 
@@ -53,7 +53,7 @@ class CreateTransactionView(CreateView):
     def form_valid(self, form):
         transaction = form.save(commit=False)
         transaction.user = self.request.user
-        balance = account_balance(self)
+        balance = account_balance(self.request.user)
         if transaction.transaction_type == 'withdrawal':
             if transaction.dollar_amount > balance:
                 form.add_error('dollar_amount', 'Insufficient Funds')
@@ -75,7 +75,7 @@ class CreateTransferView(CreateView):
     def form_valid(self, form):
         transfer = form.save(commit=False)
         transfer.user = self.request.user
-        balance = account_balance(self)
+        balance = account_balance(self.request.user)
         if transfer.dollar_amount > balance:
             form.add_error('dollar_amount', 'Insufficient Funds')
             return self.form_invalid(form)
